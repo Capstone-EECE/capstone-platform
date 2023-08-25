@@ -19,3 +19,9 @@ local development dependencies.
 You will need to get your pre-commit hooks installed:
 ```bash
 $ pre-commit install
+
+
+# Serverless Framework AWS Python Example
+
+We use serverless in the higher (dev, prod) environments. See Serverless's AWS
+Python example [here](https://www.serverless.com/examples/aws-python).
