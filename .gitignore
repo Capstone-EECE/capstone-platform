@@ -1,0 +1,23 @@
+# Distribution / packaging
+.Python
+env/
+build/
+dist/
+downloads/
+lib/
+lib64/
+parts/
+sdist/
+var/
+
+# Serverless directories
+.serverless
+node_modules/
+
+# Poetry
+.requirements
+
+**/__pycache__
+
+# VSCode
+.vscode/
