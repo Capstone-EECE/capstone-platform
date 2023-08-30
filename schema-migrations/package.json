@@ -1,0 +1,28 @@
+{
+  "name": "schema-migrations",
+  "version": "1.0.0",
+  "description": "DDL for EECE Capstone Project",
+  "main": "migrate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate": "node generate.js",
+    "migrate": "node migrate.js up",
+    "up": "node up-confirm.js",
+    "down": "node down-confirm.js",
+    "pending": "node migrate.js pending"
+  },
+  "author": "Diego Valdivia",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "pg": "^8.11.3",
+    "sequelize": "^6.32.1",
+    "sequelize-cli": "^6.6.1",
+    "ts-node": "^10.9.1",
+    "typeorm": "^0.3.17",
+    "umzug": "^3.3.1"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.1448.0"
+  }
+}
