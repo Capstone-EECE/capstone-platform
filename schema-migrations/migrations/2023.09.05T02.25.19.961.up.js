@@ -1,4 +1,4 @@
-// 2023.08.30T23.42.50.140 test
+// 2023.09.05T02.25.19.961 up
 
 module.exports = {
     DOWN: [
@@ -11,8 +11,7 @@ module.exports = {
             CREATE SCHEMA capstone;
 
             CREATE TABLE capstone.test (
-	            name text NOT NULL,
-	            text NOT NULL,
+	            name text
             );
         `
   ]

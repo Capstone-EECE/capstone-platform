@@ -15,7 +15,7 @@ const sequelize = new Sequelize({
 
 let secret: any = null;
 
-(sequelize as any).beforeConnect(async (options) => {
+(sequelize as any).beforeConnect(async (options: { username: any; host: any; }) => {
     try {
         if (false) {
             // Target DB hosted on AWS
@@ -23,7 +23,7 @@ let secret: any = null;
         } else {
             // Local DB
             (options as any).host = "localhost";
-            (options as any).database = "calibration";
+            (options as any).database = "capstone";
             (options as any).username = "postgres";
             (options as any).password = "postgres";
             (options as any).port = "8501";
