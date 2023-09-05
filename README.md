@@ -29,25 +29,25 @@ Go into the `schema-migrations` directory and make the local DB script
 executable:
 
 ```bash
-$ cd schema-migrations/ && chmod +x local_cali_platform_db_setup.sh
+$ cd schema-migrations/ && chmod +x setup_local_db.sh
 ```
 
 Run the script:
 
 ```bash
-$ ./local_cali_platform_db_setup.sh -d
+$ ./setup_local_db.sh -d
 ```
 
 Run it with `-h` to see the help:
 
 ```bash
-$ ./local_cali_platform_db_setup.sh -h
-USAGE: ./local_cali_platform_db_setup.sh [ARGS]
+$ ./setup_local_db.sh -h
+USAGE: ./setup_local_db.sh [ARGS]
 
  -h                                    Show this help message
- -d                                    Build Calibration Platform container and run in background
- -f                                    Optionally copy the seed file to container and insert records
- -s                                    Clean up the Calibration Platform container
+ -d                                    Build Platform container and run in background
+ -f                                    Copy the seed file to container and insert records
+ -s                                    Clean up the Platform container
 ```
 
 
@@ -56,7 +56,7 @@ USAGE: ./local_cali_platform_db_setup.sh [ARGS]
 From top of the project:
 
 ```bash
-$ flask --app lv_calibration_platform.api.app run --debug
+$ flask --app server.api.app run --debug
 ```
 
 
