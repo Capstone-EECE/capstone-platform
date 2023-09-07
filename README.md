@@ -9,6 +9,8 @@ activate a virtual environment for local development with something like
 `python -m venv env` and activate it. Then just install with:
 
 ```bash
+$ pip install --upgrade pip
+
 $ pip install -e .[dev]
 ```
 
