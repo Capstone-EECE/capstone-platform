@@ -1,5 +1,6 @@
 """
 Collection of Flask API route functions
+https://realpython.com/flask-blueprint/
 """
 import functools
 import logging

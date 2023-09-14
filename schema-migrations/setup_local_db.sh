@@ -4,7 +4,7 @@ readonly COLORS_CYAN='\e[36m'
 readonly COLORS_NC='\e[0m' # No Color
 readonly COLORS_GREEN='\e[32m'
 
-# functions for the calibration platform setup/teardown script
+# functions for the platform setup/teardown script
 function step() {
     printf "\n${COLORS_CYAN}@ $1${COLORS_NC}\n"
 }
