@@ -9,6 +9,8 @@ from datetime import datetime
 
 from flask import Blueprint
 
+from ..core.mock_request import get_points
+
 endpoints = Blueprint("endpoints", __name__)
 
 
@@ -17,6 +19,6 @@ def test_route():
     return ("hello", 200)
 
 
-@endpoints.get("/<id>")
-def test_param(id: str):
-    return (id, 200)
+@endpoints.get("/points")
+def test_param():
+    return get_points()
