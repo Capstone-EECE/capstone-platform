@@ -7,8 +7,9 @@ from http.client import HTTPException
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
-from server.api.modem_routes import endpoints as modem_endpoints
-from server.api.frontend_routes import endpoints as frontend_endpoints
+from server.api.modem_routes import modem_endpoints
+from server.api.frontend_routes import frontend_endpoints
+from server.core.constants import REMOTE_IP, REMOTE_PORT
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'secret!'
@@ -18,8 +19,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", logger=True)
 app.register_blueprint(modem_endpoints, url_prefix="/modem")
 app.register_blueprint(frontend_endpoints, url_prefix="/frontend")
 
-REMOTE_IP = "10.78.132.213"
-REMOTE_PORT = 5555
+
 @socketio.on("connect_drone")
 def handle_custom_event():
     print("[REQUEST] turn on drone GPS coordinates")
