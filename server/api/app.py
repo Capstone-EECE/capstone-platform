@@ -7,22 +7,19 @@ from http.client import HTTPException
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
-from routes import endpoints
-from socketIO_client import SocketIO as client_socket
+from server.api.modem_routes import endpoints as modem_endpoints
+from server.api.frontend_routes import endpoints as frontend_endpoints
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'secret!'
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 socketio = SocketIO(app, cors_allowed_origins="*", logger=True)
-app.register_blueprint(endpoints, url_prefix="/capstone")
+app.register_blueprint(modem_endpoints, url_prefix="/modem")
+app.register_blueprint(frontend_endpoints, url_prefix="/frontend")
 
 REMOTE_IP = "10.78.132.213"
 REMOTE_PORT = 5555
-NGROK_URL = "https://7c66-155-33-134-31.ngrok-free.app"
-URL = "7c66-155-33-134-31.ngrok.io"
-
-
 @socketio.on("connect_drone")
 def handle_custom_event():
     print("[REQUEST] turn on drone GPS coordinates")
@@ -53,7 +50,7 @@ def handle_custom_event():
 
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", debug=True, port=5000)
+    socketio.run(app, host="0.0.0.0", debug=True, port=5235)
 
 
 # lambda_handler = apig_wsgi.make_lambda_handler(app)
