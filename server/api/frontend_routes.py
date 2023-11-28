@@ -1,7 +1,10 @@
 import base64
-from flask import Blueprint
+
 import nanoid
 import requests
+from flask import Blueprint
+from flask_socketio import emit
+from server.api.socket_events import socketio
 from server.core.constants import (
     B64_TEMPLATE,
     DEVICE_ID,
@@ -72,7 +75,9 @@ def frontend_start_coordinate_ingestion():
     rawString = f"{REQUEST_CODE_STARTCOORDS};\n{request_id};\n"
 
     response = _send_command_to_device(rawString=rawString)
+    print("I AM HERE")
 
+    socketio.emit("coordinate", "INTEGRATION TEST!")
     if not response.ok:
         print(f"Failed to send data. HTTP Status Code: {response.status_code}")
         print(response.text)
