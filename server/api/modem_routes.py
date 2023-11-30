@@ -4,7 +4,6 @@ https://realpython.com/flask-blueprint/
 """
 
 from flask import Blueprint, json, request
-
 from server.api.frontend_routes import g_requestTracker
 
 modem_endpoints = Blueprint("modem_endpoints", __name__)
@@ -17,7 +16,7 @@ def modem_ack():
     {requestID: string}
     """
     try:
-        if request.content_length > 20:
+        if request.content_length > 100:
             return {
                 "status": "error",
                 "message": "Content too large",

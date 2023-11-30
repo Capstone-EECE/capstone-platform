@@ -11,23 +11,6 @@ def handle_connect():
     emit("connected", f"id:{request.sid} is connected")
 
 
-@socketio.on("data")
-def handle_event(data):
-    print("Data from the frontend", str(data))
-    emit("data", {"data": data, "id": request.sid}, broadcast=True)
-
-
-@socketio.on("hello")
-def handle_hello(arg):
-    print("__________________________________________________")
-    try:
-        print(arg)  # "world"
-        emit("response", "got it", broadcast=True)
-    except Exception as e:
-        print("Error: ", str(e))
-        emit("response", "Error occurred", broadcast=True)
-
-
 @socketio.on("disconnect")
 def handle_disconnect():
     print("client disconnected")
