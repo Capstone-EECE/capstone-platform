@@ -1,7 +1,9 @@
 import base64
-from flask import Blueprint
+
 import nanoid
 import requests
+from flask import Blueprint
+from server.api.socket_events import socketio
 from server.core.constants import (
     B64_TEMPLATE,
     DEVICE_ID,
@@ -53,6 +55,7 @@ def frontend_connect_to_device():
     rawString = f"{REQUEST_CODE_CONNECT};\n{ngrok_code};\n{request_id};\n"
 
     response = _send_command_to_device(rawString=rawString)
+    print(response)
 
     if not response.ok:
         print(f"Failed to send data. HTTP Status Code: {response.status_code}")
@@ -72,7 +75,7 @@ def frontend_start_coordinate_ingestion():
     rawString = f"{REQUEST_CODE_STARTCOORDS};\n{request_id};\n"
 
     response = _send_command_to_device(rawString=rawString)
-
+    socketio.emit("coordinate", {"lat": 40.3391998, "lng": -70.0})
     if not response.ok:
         print(f"Failed to send data. HTTP Status Code: {response.status_code}")
         print(response.text)
@@ -87,6 +90,8 @@ def frontend_stop_coordinate_ingestion():
     """
     Request that the device stop sending its GPS coordinates
     """
+
+    print("STOPPPING")
     request_id = nanoid.generate(size=REQUEST_ID_SIZE)
     rawString = f"{REQUEST_CODE_STOPCOORDS};\n{request_id};\n"
 
