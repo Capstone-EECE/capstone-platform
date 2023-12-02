@@ -3,7 +3,7 @@ import time
 from threading import Thread
 
 import requests
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
 from flask_socketio import Namespace, SocketIO, emit
 from server.api.socket_events import socketio
 
@@ -13,6 +13,46 @@ dummy_endpoints = Blueprint("dummy_endpoints", __name__)
 initial_location = {"lat": 42.327494, "lng": -71.115162}
 loop_running = False
 emit_points = False
+
+# MOCK DB
+database = [
+    {"username": "diegovaldivia", "password": "testpassword"},
+    {"username": "stepan", "password": "peepoopee"},
+]
+
+
+@dummy_endpoints.route("/login", methods=["GET"])
+def login_attempt():
+    time.sleep(4)
+
+    username = request.args.get("username")
+    password = request.args.get("password")
+
+    # Find user login info in Mock DB
+    user_data = next((user for user in database if user["username"] == username), None)
+
+    if user_data:
+        if user_data["password"] != password:
+            return (
+                {
+                    "success": False,
+                    "body": {"name": "pass", "message": "Invalid password"},
+                },
+                200,
+            )
+        else:
+            return (
+                {"success": True, "body": {"name": "-", "message": "Login Succesful"}},
+                200,
+            )
+    else:
+        return (
+            {
+                "success": False,
+                "body": {"name": "uname", "message": "Username not found"},
+            },
+            200,
+        )
 
 
 def generate_and_emit_coordinates():
