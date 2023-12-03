@@ -30,7 +30,6 @@ def _send_command_to_device(rawString: str):
 
     base64_encoded_data = base64.b64encode(rawString.encode()).decode()
     bytestring = bytestring % base64_encoded_data
-    print(bytestring)
     headers = {"Content-Type": "application/json"}
 
     try:
@@ -53,9 +52,7 @@ def frontend_connect_to_device():
     request_id = nanoid.generate(size=REQUEST_ID_SIZE)
     ngrok_code = "55aa"
     rawString = f"{REQUEST_CODE_CONNECT};\n{ngrok_code};\n{request_id};\n"
-
     response = _send_command_to_device(rawString=rawString)
-    print(response)
 
     if not response.ok:
         print(f"Failed to send data. HTTP Status Code: {response.status_code}")
@@ -75,7 +72,6 @@ def frontend_start_coordinate_ingestion():
     rawString = f"{REQUEST_CODE_STARTCOORDS};\n{request_id};\n"
 
     response = _send_command_to_device(rawString=rawString)
-    socketio.emit("coordinate", {"lat": 40.3391998, "lng": -70.0})
     if not response.ok:
         print(f"Failed to send data. HTTP Status Code: {response.status_code}")
         print(response.text)

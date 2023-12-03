@@ -5,6 +5,7 @@ https://realpython.com/flask-blueprint/
 
 from flask import Blueprint, json, request
 from server.api.frontend_routes import g_requestTracker
+from server.api.socket_events import socketio
 
 modem_endpoints = Blueprint("modem_endpoints", __name__)
 
@@ -55,6 +56,7 @@ def modem_post_coords():
         lat = data_json["location"]["lat"]
         lng = data_json["location"]["lng"]
         request_id = data_json["requestID"]
+        socketio.emit("coordinate", data_json)
 
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -88,6 +90,7 @@ def modem_post_sensor_data():
         data_json = json.loads(request.get_data())
         reading_count = int(data_json["count"])
         readings = data_json["readings"]
+
         request_id = data_json["requestID"]
 
     except Exception as e:
@@ -118,6 +121,8 @@ def modem_post_battery_status():
 
         data_json = json.loads(request.get_data())
         batteryReading = data_json["batteryReading"]
+        socketio.emit("battery", batteryReading)
+
         request_id = data_json["requestID"]
 
     except Exception as e:
