@@ -8,7 +8,7 @@ socketio = SocketIO(cors_allowed_origins="*", logger=True)
 def handle_connect():
     print(f"Client id:{request.sid} is connected")
     print("*************************************")
-    emit("battery", 20)
+    emit("battery", 50)
 
 
 @socketio.on("disconnect")

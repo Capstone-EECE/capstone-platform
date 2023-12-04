@@ -48,6 +48,7 @@ def frontend_connect_to_device():
     """ "
     Fire and forget method to send server info to device
     UI will update with ACK from device modem_ack()
+    FORMAT: XXXX-NGROKIP(3D-2D-3D-2D)
     """
     request_id = nanoid.generate(size=REQUEST_ID_SIZE)
     ngrok_code = "55aa"
@@ -81,7 +82,7 @@ def frontend_start_coordinate_ingestion():
     return ("START COORDS Request Sent. Wait for ACK and Coordinates in POST", 200)
 
 
-@frontend_endpoints.route("gps/stop", methods=["GET"])
+@frontend_endpoints.route("/gps/stop", methods=["GET"])
 def frontend_stop_coordinate_ingestion():
     """
     Request that the device stop sending its GPS coordinates
@@ -140,7 +141,7 @@ def frontend_stop_points_ingestion():
     return ("STOP SENSOR READING Request Sent. Wait for ACK in POST", 200)
 
 
-@frontend_endpoints.route("battery", methods=["GET"])
+@frontend_endpoints.route("/battery", methods=["GET"])
 def frontend_get_battery_status():
     """
     Request updated battery information from device
@@ -157,3 +158,11 @@ def frontend_get_battery_status():
 
     g_requestTracker.newRequest(request_id)
     return ("BATTERY Request Sent. Wait for ACK and data in POST", 200)
+
+
+@frontend_endpoints.route("/login", methods=["GET"])
+def login_attempt():
+    return (
+        {"success": True, "body": {"name": "-", "message": "Login Succesful"}},
+        200,
+    )

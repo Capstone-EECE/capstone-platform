@@ -1,4 +1,6 @@
+import math
 import random
+import threading
 import time
 from threading import Thread
 
@@ -10,14 +12,10 @@ from server.api.socket_events import socketio
 dummy_endpoints = Blueprint("dummy_endpoints", __name__)
 
 
-initial_location = {"lat": 42.327494, "lng": -71.115162}
-loop_running = False
-emit_points = False
-
 # MOCK DB
 database = [
     {"username": "diegovaldivia", "password": "testpassword"},
-    {"username": "stepan", "password": "peepoopee"},
+    {"username": "stepan", "password": "poopoopeepee123"},
 ]
 
 
@@ -55,55 +53,105 @@ def login_attempt():
         )
 
 
-def generate_and_emit_coordinates():
-    global initial_location
-    random_lat_offset = random.uniform(0, 0.0001)
-    random_lng_offset = random.uniform(0, 0.0001)
-
-    initial_location["lat"] += random_lat_offset
-    initial_location["lng"] += random_lng_offset
-
-    print("New Location:", initial_location)
-    socketio.emit("coordinate", initial_location)
-
-    return initial_location
+# ----------------------------------------------------------
 
 
-def generate_and_emit_points():
-    global initial_location
-    for i in range(10):  # Emit "point" event 10 times (adjust as needed)
-        socketio.emit("point", initial_location)
+point_events_per_stop = [5, 7, 3, 10, 6]
+current_location = (42.319121, -71.120366)
+i = 0
+emit_points = False
 
 
-def continuous_loop():
-    global loop_running, emit_points
-    counter = 0
-    while loop_running and counter < 50:
-        generate_and_emit_coordinates()
+def simulateDrone():
+    global i
 
-        if emit_points:
-            generate_and_emit_points()
+    # Define the four lat lng values
+    locations = [
+        (42.319121, -71.120366),
+        (42.318979, -71.121108),
+        (42.318342, -71.120869),
+        (42.318525, -71.119824),
+        (42.319121, -71.120366),
+    ]
 
-        counter += 1
-        time.sleep(0.5)
+    increment = 0.00001
+    current_location = locations[0]  # Start from the first location
+
+    for target_location in locations:
+        i += 1
+
+        while True:
+            # Calculate the distance between current_location and target_location
+            distance = math.dist(current_location, target_location)
+
+            if (
+                distance < 1e-4
+            ):  # You can adjust this threshold based on your precision requirements
+                break
+
+            # Increment or decrement the lat and/or lng based on the target_location
+            lat_diff = target_location[0] - current_location[0]
+            lng_diff = target_location[1] - current_location[1]
+
+            if lat_diff != 0:
+                current_location = (
+                    current_location[0] + increment
+                    if lat_diff > 0
+                    else current_location[0] - increment,
+                    current_location[1],
+                )
+            if lng_diff != 0:
+                current_location = (
+                    current_location[0],
+                    current_location[1] + increment
+                    if lng_diff > 0
+                    else current_location[1] - increment,
+                )
+
+            # Print or use the current_location as needed
+            socketio.emit(
+                "coordinate", {"lat": current_location[0], "lng": current_location[1]}
+            )
+            # print(f"Current Location: {current_location}")
+            time.sleep(0.1)
+
+        for _ in range(60):  # Assuming each iteration represents 0.1 seconds
+            time.sleep(0.1)
+            # Introduce small random variations to simulate slight movements
+            current_location = (
+                current_location[0] + random.uniform(-0.00001, 0.00001),
+                current_location[1] + random.uniform(-0.00001, 0.00001),
+            )
+            socketio.emit(
+                "coordinate", {"lat": current_location[0], "lng": current_location[1]}
+            )
+
+            if emit_points:
+                for _ in range(point_events_per_stop[i]):
+                    socketio.emit(
+                        "point",
+                        {
+                            "lat": current_location[0],
+                            "lng": current_location[1],
+                            "value": point_events_per_stop[i],
+                        },
+                    )
 
 
 @dummy_endpoints.route("/gps/start", methods=["GET"])
 def frontend_start_coordinate_ingestion():
-    global loop_running, emit_points
-    if not loop_running:
-        loop_running = True
-        emit_points = False  # Set the flag to emit coordinates
-        Thread(target=continuous_loop).start()
+    global location_thread_instance, i
+    location_thread_instance = Thread(target=simulateDrone)
+    location_thread_instance.start()
+
     return ("movement successful", 200)
 
 
 @dummy_endpoints.route("/points/start", methods=["GET"])
 def frontend_start_points_ingestion():
-    global loop_running, emit_points
+    global emit_points
     emit_points = True
-    Thread(target=continuous_loop).start()
-    return ("stop successful", 200)
+    return ("point movement started", 200)
 
 
 # --------------------------------------------------------------
