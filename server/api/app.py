@@ -1,6 +1,7 @@
 # app.py
 from flask import Flask
 from flask_cors import CORS
+from server.api.demo_routes import demo_endpoints
 from server.api.dummy_routes import dummy_endpoints
 from server.api.frontend_routes import frontend_endpoints
 from server.api.modem_routes import modem_endpoints
@@ -13,6 +14,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 app.register_blueprint(modem_endpoints, url_prefix="/modem")
 app.register_blueprint(frontend_endpoints, url_prefix="/frontend")
 app.register_blueprint(dummy_endpoints, url_prefix="/dummy")
+app.register_blueprint(demo_endpoints, url_prefix="/demo")
 
 if __name__ == "__main__":
     socketio.init_app(app)
